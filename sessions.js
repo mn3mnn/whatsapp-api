@@ -239,6 +239,7 @@ const initializeEvents = (client, sessionId) => {
               console.log('Download media error:', e.message)
             })
           })
+          
         }
         if (setMessagesAsSeen) {
           const chat = await message.getChat()

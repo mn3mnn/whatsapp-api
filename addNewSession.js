@@ -1,11 +1,11 @@
 const { sessions, setupSession } = require('./sessions');
 const qrcode = require('qrcode-terminal')
 
-res1 =  setupSession('525-1');
-res2 =  setupSession('525-2');
+res1 =  setupSession('new1');
+// res2 =  setupSession('new2');
 
 console.log(res1);
-console.log(res2);
+// console.log(res2);
 
 for (const [sessionID, client] of sessions.entries()) {
     // client.on('qr', (qr_) => {

@@ -6,15 +6,16 @@ const { saveNewMessage } = require('../db');
 
 const { notifyUserAPI } = require('../utils');
 
-let curr_client_index = 0;  // round robin to get the next available client
+let curr_client_index = 0;  // round-robin to get the next available client
 
-const messageQueue = []; // Simple array-based message queue
+const messageQueue = [];
 
-// Initialize the WhatsApp clients from the saved sessions
+// Initialize {sessions} with the WhatsApp clients from the sessions directory
 restoreSessions();
 
+
 exports.addMessage = async (phoneNumber, content) => {
-  // Save message with status and get ID
+  // Save message to db
   const message = await saveNewMessage(phoneNumber, content);
 
   // Add message to the queue
@@ -22,6 +23,7 @@ exports.addMessage = async (phoneNumber, content) => {
 
   return message;
 };
+
 
 const getAvailableClient = async () => {
   console.log(`Trying to get client, sessions size: ${sessions.size}`);
@@ -108,127 +110,4 @@ const processMessage = async (message) => {
 
 // Periodically process the message queue
 setInterval(processMessageQueue, 100); // each 100ms
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const { Client } = require('whatsapp-web.js');
-// const { sessions, validateSession, restoreSessions } = require('../sessions');
-
-// const { Message } = require('../models/Message');
-// const { saveNewMessage } = require('../db');
-
-// const { Queue, Worker } = require('bull');
-// const messageQueue = new Queue('messageQueue');
-
-// const { notifyUserAPI } = require('../utils');
-
-// let curr_client_index = 0;  // round robin to get the next available client
-
-
-// // Initialize the whatsapp clients from the saved sessions
-// restoreSessions();
-
-
-// exports.addMessage = async (phoneNumber, content) => {  
-
-//   // Save message with status and get ID
-//   const message = await saveNewMessage(phoneNumber, content);
-
-//   // Add message to the queue
-//   await messageQueue.add({message});
-
-//   return message;
-// };
-
-// function getAvailableClient() {
-//   // loop through the sessions and get the first available client from the last used client
-//   let client = null;
-//   let i = 0;
-//   while (client == null && i < sessions.length) {
-
-//     const { connected, message } = validateSession(Object.keys(sessions)[curr_client_index]);
-//     console.log(`client ${sessions.keys()[curr_client_index]} , connected: ${connected}, message: ${message}`);
-
-//     if (connected) {
-//       client = sessions.get(Object.keys(sessions)[curr_client_index]);
-//     }
-//     console.log(`client ${curr_client_index} state:  ${sessions.get(Object.keys(sessions)[curr_client_index]).getState()}`);
-//     i++;
-//     curr_client_index = (curr_client_index + 1) % sessions.length;
-//   }
-  
-//   if (client == null) {
-//     throw new Error('No available clients to send message');
-//   }
-
-//   return client;
-// }
-
-
-// // Worker to process the message queue
-// const messageQueueWorker = new Worker('messageQueue', async job => {
-//   const { message } = job.data;
-  
-//   const { _id, to: phoneNumber, content } = message;
-//   const messageID = _id.toString();
-  
-//   console.log(`Processing message: '${content}' to '${phoneNumber}'`);
-
-//   let messageSent = false;
-
-//   try {
-//     // Get an available client
-//     const client = getAvailableClient();
-
-//     // Check if the phone number we sending to is registered on WhatsApp
-//     const isRegistered = await client.isRegisteredUser(phoneNumber);
-//     if (!isRegistered) {
-//       throw new Error('Phone number is not registered on WhatsApp');
-//     }
-
-//     // Send the message and update the message status
-//     try {
-//       await client.sendMessage(`${phoneNumber}@c.us`, content);
-//       console.log(`sent message: '${content}' to '${phoneNumber}'`);
-//       message.status = 'sent';
-//     } 
-//     catch (error) {
-//       console.error(`error sending message: '${content}' to '${phoneNumber}'`, error);
-//       message.status = 'failed';
-//     }
-//   } 
-//   catch (error) {  // update the message status in case of error
-//     console.error(error);
-//     message.status = 'failed';
-//   }
-//   // Save the message status
-//   await message.save();
-
-//   // Notify the user API about the message status
-//   notifyUserAPI(message);
-  
-// });
 
