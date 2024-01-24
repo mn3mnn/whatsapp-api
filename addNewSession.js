@@ -4,7 +4,7 @@ const qrcode = require('qrcode-terminal')
 res1 =  setupSession('new1');
 // res2 =  setupSession('new2');
 
-console.log(res1);
+//console.log(res1);
 // console.log(res2);
 
 for (const [sessionID, client] of sessions.entries()) {

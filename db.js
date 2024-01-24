@@ -4,6 +4,7 @@ const Message = require('./models/Message');
 
 const connectToDatabase = async () => {
   try {
+    console.log('Connecting to MongoDB');
     await mongoose.connect(mongodbURI, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log('Connected to MongoDB');
   } catch (error) {

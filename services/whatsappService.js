@@ -10,9 +10,6 @@ let curr_client_index = 0;  // round-robin to get the next available client
 
 const messageQueue = [];
 
-// Initialize {sessions} with the WhatsApp clients from the sessions directory
-restoreSessions();
-
 
 exports.addMessage = async (phoneNumber, content) => {
   // Save message to db
@@ -108,6 +105,15 @@ const processMessage = async (message) => {
   notifyUserAPI(message);
 };
 
-// Periodically process the message queue
-setInterval(processMessageQueue, 100); // each 100ms
 
+
+const startWaService = () => {
+  console.log('Starting WA service / restoring sessions');
+  // Initialize {sessions} with the WhatsApp clients from the sessions directory
+  restoreSessions();
+  // Periodically process the message queue
+  setInterval(processMessageQueue, 100); // each 100ms
+
+};
+
+exports.startWaService = startWaService;

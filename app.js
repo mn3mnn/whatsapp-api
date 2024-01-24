@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const apiRoutes = require('./routes/api');
 const { connectToDatabase } = require('./db');
+const { startWaService } = require('./services/whatsappService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +16,8 @@ const main = async () => {
   try {
     // Connect to the database
     await connectToDatabase();
-
+    startWaService();
+    
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
     });
