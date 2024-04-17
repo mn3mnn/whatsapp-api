@@ -116,4 +116,29 @@ const startWaService = () => {
 
 };
 
+const print_qr_on_ready = () => {
+  for (const [sessionID, client] of sessions.entries()) {
+    client.on('qr', (qr_) => {
+        // Generate and scan this code with your phone
+        console.log(`QR RECEIVED FOR SESSION: ${sessionID}`);
+        qr.generate(qr_, { small: true });
+    });
+
+    client.on('authenticated', (session) => {
+        console.log(`AUTHENTICATED: ${session}`);
+    });
+
+    // client.on('auth_failure', (session) => {
+    //     console.log(`AUTHENTICATION FAILURE: ${session}`);
+    // });
+
+    client.on('ready', async () => {
+        console.log(`READY: ${sessionID}`);
+    });
+  }
+}
+
+
+print_qr_on_ready();
+
 exports.startWaService = startWaService;
